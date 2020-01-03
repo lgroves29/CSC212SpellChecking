@@ -1,4 +1,4 @@
-package edu.smith.cs.csc212.speller;
+  package edu.smith.cs.csc212.speller;
 
 import java.util.AbstractSet;
 import java.util.ArrayList;
@@ -95,7 +95,13 @@ public class LLHash extends AbstractSet<String> {
 	 * @return the number of buckets with more than one value.
 	 */
 	public int countCollisions() {
-		return 0;
+		int collisions = 0;
+		for (Bucket bucket : this.buckets) {
+			if (bucket.values.size() > 1) {
+				collisions ++;
+			}
+		}
+		return collisions;
 	}
 
 	/**
@@ -104,6 +110,11 @@ public class LLHash extends AbstractSet<String> {
 	 */
 	public int countUsedBuckets() {
 		int count = 0;
+		for (Bucket bucket : this.buckets) {
+			if (bucket.values.size() != 0) {
+				count++;
+			}
+		}
 		return count;
 	}
 	

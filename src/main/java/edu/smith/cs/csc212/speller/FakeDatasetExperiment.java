@@ -20,7 +20,9 @@ public class FakeDatasetExperiment {
 	 * @return an incorrectly-spelled word. Maybe you deleted a letter or added one?
 	 */
 	public static String makeFakeWord(String realWord) {
-		throw new RuntimeException("TODO");
+		int length = realWord.length();
+		String fakeWord = realWord.substring(1,length);
+		return fakeWord;
 	}
 
 	/**
@@ -37,8 +39,14 @@ public class FakeDatasetExperiment {
 	public static List<String> createMixedDataset(List<String> yesWords, int numSamples, double fractionYes) {
 		// Hint to the ArrayList that it will need to grow to numSamples size:
 		List<String> output = new ArrayList<>(numSamples);
-		// TODO: select numSamples * fractionYes words from yesWords; create the rest as
-		// no words.
+		int numReal = (int) (numSamples * fractionYes);
+		for (int i = 0; i < numReal; i ++) {
+			output.add(yesWords.get(i));
+		}
+		for (int i = numReal; i < numSamples; i ++) {
+			output.add(makeFakeWord(yesWords.get(i)));
+		}
+		
 		return output;
 	}
 
@@ -64,8 +72,8 @@ public class FakeDatasetExperiment {
 			hm100k.add(w);
 		}
 		
-		// --- OK, so that was a biased experiment (the answer to every question was yes!).
-		// Let's try 10% yesses.
+//		 --- OK, so that was a biased experiment (the answer to every question was yes!).
+//		 Let's try 10% yesses.
 		for (int i = 0; i < 10; i++) {
 			// --- Create a dataset of mixed hits and misses with p=i/10.0
 			List<String> hitsAndMisses = createMixedDataset(listOfWords, 10_000, i / 10.0);
@@ -78,5 +86,18 @@ public class FakeDatasetExperiment {
 			CheckSpelling.timeLookup(hitsAndMisses, trie);
 			CheckSpelling.timeLookup(hitsAndMisses, hm100k);
 		}
+		for (double percentage = 0.0; percentage < 1.0; percentage += .1) {
+			List<String> mixedWords = createMixedDataset(listOfWords, 100, percentage);
+			System.out.println("The perentage of correct words is " + percentage*100);
+			CheckSpelling.timeLookup(mixedWords, treeOfWords);	
+			CheckSpelling.timeLookup(mixedWords, hashOfWords);	
+			CheckSpelling.timeLookup(mixedWords, bsl);	
+			CheckSpelling.timeLookup(mixedWords, trie);	
+			CheckSpelling.timeLookup(mixedWords, hm100k);	
+			
+		}
+		
+		
+		
 	}
 }

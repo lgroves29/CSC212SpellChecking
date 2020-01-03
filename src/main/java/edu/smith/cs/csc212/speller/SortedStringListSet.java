@@ -44,15 +44,33 @@ public class SortedStringListSet extends AbstractSet<String> {
 	}
 	
 	/**
-	 * TODO: replace this binarySearch with your own.
 	 * @param query  - the string to look for.
 	 * @param start - the left-hand side of this search (inclusive)
 	 * @param end - the right-hand side of this search (exclusive)
 	 * @return the index found, OR negative if not found.
+	 * based on the logic 
+	 * https://ai.googleblog.com/2006/06/extra-extra-read-all-about-it-nearly.html
 	 */
+	
 	private int binarySearch(String query, int start, int end) {
-		// TODO: replace this with your own binary search.
-		return Collections.binarySearch(this.data.subList(start, end), query);
+		int index = -1;
+		while (start < end) {
+			int middle = (end + start) >>> 1;
+			/**
+			 * stumbled on this because java suggested it when I started writing a 
+			 * different method 
+			 */
+			if (this.data.get(middle).compareTo(query) < 0) {
+				start = middle + 1;
+			}
+			else if (this.data.get(middle).compareTo(query) > 0) {
+				end = middle - 1;
+			}
+			else {
+				return middle;
+			}
+		}
+		return index;
 	}
 
 	/**

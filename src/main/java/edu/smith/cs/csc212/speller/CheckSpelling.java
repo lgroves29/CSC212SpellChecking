@@ -42,6 +42,7 @@ public class CheckSpelling {
 			if (dictionary.contains(w)) {
 				found++;
 			}
+
 		}
 		
 		long endLookup = System.nanoTime();
@@ -60,31 +61,63 @@ public class CheckSpelling {
 		List<String> listOfWords = loadDictionary();
 		
 		// --- Create a bunch of data structures for testing:
-		TreeSet<String> treeOfWords = new TreeSet<>(listOfWords);
-		HashSet<String> hashOfWords = new HashSet<>(listOfWords);
-		SortedStringListSet bsl = new SortedStringListSet(listOfWords);
-		CharTrie trie = new CharTrie();
-		for (String w : listOfWords) {
-			trie.insert(w);
-		}
-		LLHash hm100k = new LLHash(100000);
+//		long startTree = System.nanoTime();
+//		TreeSet<String> treeOfWords = new TreeSet<>(listOfWords);
+//		long endTree = System.nanoTime();
+//		long startHash = System.nanoTime();
+//		HashSet<String> hashOfWords = new HashSet<>(listOfWords);
+//		long endHash = System.nanoTime();
+//		long startSorted = System.nanoTime();
+//		SortedStringListSet bsl = new SortedStringListSet(listOfWords);
+//		long endSorted = System.nanoTime();
+//		long startTrie = System.nanoTime();
+//		CharTrie trie = new CharTrie();
+//		for (String w : listOfWords) {
+//			trie.insert(w);
+//		}
+//		long endTrie = System.nanoTime();
+		long startLL = System.nanoTime();
+		LLHash hm100k = new LLHash(100);
 		for (String w : listOfWords) {
 			hm100k.add(w);
 		}
+		long endLL = System.nanoTime();
 		
-		// --- Make sure that every word in the dictionary is in the dictionary:
-		//     This feels rather silly, but we're outputting timing information!
-		timeLookup(listOfWords, treeOfWords);
-		timeLookup(listOfWords, hashOfWords);
-		timeLookup(listOfWords, bsl);
-		timeLookup(listOfWords, trie);
+//		long startEmptyTree = System.nanoTime();
+//		TreeSet<String> tree2 = new TreeSet<>();
+//		for (String w : listOfWords) {
+//			tree2.add(w);
+//		}
+//		long endEmptyTree = System.nanoTime();
+		
+//		long startEmptyHash = System.nanoTime();
+//		TreeSet<String> hash2 = new TreeSet<>();
+//		for (String w : listOfWords) {
+//			hash2.add(w);
+//		}
+//		long endEmptyHash = System.nanoTime();
+		
+//		long treeInsertion = endTree - startTree;
+//		long hashInsertion = endHash - startHash;
+//		long sortedInsertion = endSorted - startSorted;
+//		long trieInsertion = endTrie - startTrie;
+		long llInsertion = endLL - startLL;
+//		long treeSlow = endEmptyTree - startEmptyTree;
+//		long hashSlow = endEmptyHash -startEmptyHash;
+//		
+//		// --- Make sure that every word in the dictionary is in the dictionary:
+//		//     This feels rather silly, but we're outputting timing information!
+//		timeLookup(listOfWords, treeOfWords);
+//		timeLookup(listOfWords, hashOfWords);
+//		timeLookup(listOfWords, bsl);
+//		timeLookup(listOfWords, trie);
 		timeLookup(listOfWords, hm100k);
-		
+//		
 		
 		
 	
 		// --- print statistics about the data structures:
-		System.out.println("Count-Nodes: "+trie.countNodes());
+		//System.out.println("Count-Nodes: "+trie.countNodes());
 		System.out.println("Count-Items: "+hm100k.size());
 
 		System.out.println("Count-Collisions[100k]: "+hm100k.countCollisions());
@@ -94,6 +127,13 @@ public class CheckSpelling {
 		
 		System.out.println("log_2 of listOfWords.size(): "+listOfWords.size());
 		
-		System.out.println("Done!");
+		//System.out.println("Done!");
+		//System.out.println("inserting to tree takes " +treeInsertion+" nanoseconds");
+		//System.out.println("inserting to hash takes " +hashInsertion+" nanoseconds");
+		//System.out.println("inserting to sorted list takes " +sortedInsertion+" nanoseconds");
+		//System.out.println("inserting to charTrie takes " +trieInsertion+" nanoseconds");
+		System.out.println("inserting to LLHash takes " +llInsertion+" nanoseconds");
+		//System.out.println("inserting to Hash one by one takes " +treeSlow+" nanoseconds");
+		//System.out.println("inserting to Tree one by one takes " +hashSlow+" nanoseconds");
 	}
 }
